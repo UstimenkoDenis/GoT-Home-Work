@@ -45,7 +45,13 @@ const CharBlock = styled.div `
     border-radius: 5px;
     color: #fff;
     padding: 25px 25px 15px 25px;
-    margin-bottom: 40px;
+    margin: 20px;
+    @media (max-width: 768px) {
+        
+        margin:  0;
+        padding: 0;
+    }
+   
 `;
 const CharHeader = styled.h4 `
     margin-bottom: 20px;

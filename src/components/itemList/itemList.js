@@ -31,7 +31,13 @@ const CharacterList = styled.ul `
     list-style-type: none;   
     border: 1px solid #bbacac;
     border-radius: 5px;
-    margin-bottom: 40px;
+    margin: 20px;
+    @media (max-width: 768px) {
+        
+        margin:  0;
+        padding: 0;
+    }
+
 `; // list-style-type: none - убираем кружки у списка
 
 const Character = styled.li `

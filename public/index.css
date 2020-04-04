@@ -5,6 +5,7 @@
     outline: none;
 }
 body {
+ 
     overflow-x: hidden;
     background: url('img/got.jpeg') center center no-repeat;
     background-size: cover;
