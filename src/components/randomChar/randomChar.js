@@ -1,44 +1,12 @@
 import React, {Component} from 'react';
 import './randomChar.css';
 
-
+import GotService from '../../services/gotService'
 import styled from 'styled-components'; // ввели стилизованные компоненты
+import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
 
-
-// export default class RandomChar extends Component {
-
-//     render() {
-
-//         return (
-//             <div className="random-block rounded">
-//                 <h4>Random Character: John</h4>
-//                 <ul className="list-group list-group-flush">
-//                     <li className="list-group-item d-flex justify-content-between">
-//                         <span className="term">Gender </span>
-//                         <span>male</span>
-//                     </li>
-//                     <li className="list-group-item d-flex justify-content-between">
-//                         <span className="term">Born </span>
-//                         <span>11.03.1039</span>
-//                     </li>
-//                     <li className="list-group-item d-flex justify-content-between">
-//                         <span className="term">Died </span>
-//                         <span>13.09.1089</span>
-//                     </li>
-//                     <li className="list-group-item d-flex justify-content-between">
-//                         <span className="term">Culture </span>
-//                         <span>Anarchy</span>
-//                     </li>
-//                 </ul>
-//             </div>
-//         );
-//     }
-// }
-
-
-///////////////////////////////// Домашняя работа ///////////////////////////////////
-////////////////////////// применяем styled components //////////////////////////////
-
+//////////////////////////////////styled components//////////////////////////////////
 const CharBlock = styled.div `
     border: 1px solid #bbacac;
     border-radius: 5px;
@@ -77,33 +45,95 @@ const CharacterData = styled.li `
 const CharDataName = styled.span `
     font-weight: bold;
 `;
+//////////////////////////////////styled components//////////////////////////////////
 
 export default class RandomChar extends Component {
+    
+        gotService = new GotService();
 
+        state = {
+           char: {}, 
+           loading: true,
+           error: false 
+        }
+        
+    componentDidMount() {
+        
+       this.updateChar();
+       this.timerId = setInterval(this.updateChar, 1500);
+      
+        console.log('mounting');
+
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.timerId);
+        console.log('unmounting');
+    }
+
+    updateChar = () => {
+
+        const id = Math.floor(Math.random()*140+50); 
+         this.gotService.getCharacter(id)
+                .then(this.onCharLoaded)
+                .catch(this.onError)
+    }
+    
+    onCharLoaded = (char) => {
+        this.setState({
+            char,
+            loading: false,
+            error: false
+        })
+    } 
+
+    onError = () => { 
+        this.setState({
+            error: true,
+            loading: false
+        })
+    }
+    
     render() {
-
+        console.log('render');
+        const {char, loading, error } = this.state;
+        const errorMessage = error? <ErrorMessage/> : null
+        const spinner = loading? <Spinner/> : null; 
+        const content = !(loading||error)? <View char={char}/>: null; 
+                
         return (
             <CharBlock>
-                <CharHeader>Random Character: John</CharHeader>
-                <CharList>
-                    <CharacterData>
-                        <CharDataName>Gender </CharDataName>
-                        <span>male</span>
-                    </CharacterData>
-                    <CharacterData>
-                        <CharDataName>Born </CharDataName>
-                        <span>11.03.1039</span>
-                    </CharacterData>
-                    <CharacterData>
-                        <CharDataName>Died </CharDataName>
-                        <span>13.09.1089</span>
-                    </CharacterData>
-                    <CharacterData>
-                        <CharDataName>Culture </CharDataName>
-                        <span>Anarchy</span>
-                    </CharacterData>
-                </CharList>
+                {errorMessage}
+                {spinner}
+                {content}
             </CharBlock>
         );
     }
+}
+
+const View = ({char})=> { 
+    const {name, gender, born, died, culture} = char;
+    return (
+        <>
+            <CharHeader>Random Character: {name}</CharHeader>
+            <CharList>
+                <CharacterData>
+                    <CharDataName>Gender </CharDataName>
+                        <span>{gender}</span>
+                </CharacterData>
+                <CharacterData>
+                    <CharDataName>Born </CharDataName>
+                        <span>{born}</span>
+                </CharacterData>
+                <CharacterData>
+                    <CharDataName>Died </CharDataName>
+                    <span>{died}</span>
+                </CharacterData>
+                <CharacterData>
+                    <CharDataName>Culture </CharDataName>
+                    <span>{culture}</span>
+                </CharacterData>
+            </CharList>
+        </>
+    )
 }

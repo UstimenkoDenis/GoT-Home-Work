@@ -1,45 +1,16 @@
-import React from 'react';
+import React, {Component} from 'react';
 // import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
 import CharDetails from '../charDetails';
-
 import styled from 'styled-components'; // ввели стилизованные компоненты
+import GotService from '../../services'
+import ErrorMessage from '../errorMessage'
+import CharacterPage from '../pages/characterPage/characterPage';
 
 
-// const App = () => {
-//     return (
-//         <> 
-//             <Container>
-//                 <Header />
-//             </Container>
-//             <Container>
-//                 <Row>
-//                     <Col lg={{size: 5, offset: 0}}>
-//                         <RandomChar/>
-//                     </Col>
-//                 </Row>
-//                 <Row>
-//                     <Col md='6'>
-//                         <ItemList />
-//                     </Col>
-//                     <Col md='6'>
-//                         <CharDetails />
-//                     </Col>
-//                 </Row>
-//             </Container>
-//         </>
-//     );
-// };
-
-// export default App;
-
-
-
-////////////////////////////// Домашнее задание /////////////////////////////////
-
-///////// делаем при помощи styled components
+///////////////////////////////////// styled components //////////////////////////////
 
 const Container = styled.div `
 
@@ -71,37 +42,102 @@ const Col = styled.div `
         margin: 5px;
         padding: 5px;
     }
+    
 `;
 
 const Block = styled.div `
     height: 400px;
 `;
 
+const Button = styled.button `
+    width: 200px;
+    height: 30px;
+    background-color: blue;
+    
+`;
+///////////////////////////////////// styled components //////////////////////////////
 
-const App = () => {
-    return (
-        <> 
-            <Container>
-                <Header />
-            </Container>
-            <Container>
-                <Row>
-                    <Block></Block>
-                </Row>
-                <Row>
-                    <Col>
-                        <RandomChar/>
-                    </Col>
-                    <Col>
-                        <ItemList />
-                    </Col>
-                    <Col>
-                        <CharDetails />
-                    </Col>
-                </Row>
-            </Container>
-        </>
-    );
+export default class App extends Component {
+    gotService = new GotService();
+
+        state = {
+            toggleChr: false,
+
+            visibleRandom: true,
+            error: false
+        };
+              
+    componentDidCatch() {
+        console.log('error')
+        this.setState({
+            error: true
+        })
+    }    
+    
+    setVisibleRand = () => {   
+        this.setState({
+            visibleRandom: !this.state.visibleRandom,
+            toggleChr: !this.state.toggleChr
+        })
+    }
+    
+    render() {
+        if(this.state.error){
+           return <ErrorMessage/>
+        }
+
+
+        const {visibleRandom, toggleChr} = this.state;
+        const visibleRand = visibleRandom? <RandomChar/> : null;
+        const toggleCharacter = toggleChr? 'Показать ': 'Скрыть'; // rename label on button
+
+        return (
+            <> 
+                <Container>
+                    <Header />
+                </Container>
+                <Container>
+                    <Row>
+                        <Block></Block>
+                    </Row>
+                    <Row>
+                        <Col>
+                            {visibleRand}
+                            <Button onClick = {this.setVisibleRand}> Нажмите чтобы {toggleCharacter} </Button>
+                        </Col>
+                        <CharacterPage/> 
+                    </Row>
+
+                    <Row>
+                        <Col>
+                            <ItemList
+                                onItemSelected = {this.onItemSelected}
+                                getData = {this.gotService.getAllBooks}
+                                // renderItem = {(item) => (<><span>{item.name}</span><button>Click me</button></>)}/> 
+                                renderItem = {(item) => item.name}/> 
+
+                        </Col>
+                        <Col>
+                            <CharDetails
+                                charId={this.state.selectedChar}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <ItemList
+                                onItemSelected = {this.onItemSelected}
+                                getData = {this.gotService.getAllHouses}
+                                renderItem = {({name}) =>name} /> 
+                                
+                        </Col>
+                        <Col>
+                            <CharDetails
+                                charId={this.state.selectedChar}/>
+                        </Col>
+                    </Row>
+                </Container>
+            </>
+        );
+    }
+    
 };
-
-export default App;
