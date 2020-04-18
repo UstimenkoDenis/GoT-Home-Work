@@ -1,48 +1,52 @@
 import React, {Component} from 'react';
-import './randomChar.css';
-
 import GotService from '../../services/gotService'
 import styled from 'styled-components'; // ввели стилизованные компоненты
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
 //////////////////////////////////styled components//////////////////////////////////
+
 const CharBlock = styled.div `
-    border: 1px solid #bbacac;
-    border-radius: 5px;
+
+   
+    width: 100%;
     color: #fff;
-    padding: 25px 25px 15px 25px;
-    margin: 20px;
+    font-size: 18px;
+    padding: 5px 5px 5px 5px;
+    margin: 5px;
     @media (max-width: 768px) {
         
         margin:  0;
         padding: 0;
+        font-size: 12px;
     }
 
 `;
-const CharHeader = styled.h4 `
-    margin-bottom: 20px;
+const HeaderS = styled.h4 `
+    margin-bottom: 5px;
     text-align: center;
 `;
-const CharList = styled.ul `
+const Uls = styled.ul `
+  
     display: flex;
-    flex-direction: column;
-    padding: 25px 25px 25px 25px;
+    padding: 5px 25px 5px 5px;
     list-style-type: none;   
-    margin-bottom: 40px;
+    margin-bottom: 10px;
+    justify-content: center;
 `;
 
-const CharacterData = styled.li `
+const Lis = styled.li `
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     cursor: pointer;
     color: #fff;
-    font-size: 1rem;
-    padding: 12px 20px;
-    border-bottom: 1px solid #bbacac;
+    padding: 5px 5px;
+   
 `;
 
-const CharDataName = styled.span `
+const Spans = styled.span `
+    padding: 0 30px 0 0;
+    color: rgb(92, 45, 45);
     font-weight: bold;
 `;
 //////////////////////////////////styled components//////////////////////////////////
@@ -60,7 +64,7 @@ export default class RandomChar extends Component {
     componentDidMount() {
         
        this.updateChar();
-       this.timerId = setInterval(this.updateChar, 1500);
+       this.timerId = setInterval(this.updateChar, 6000);
       
         console.log('mounting');
 
@@ -115,25 +119,25 @@ const View = ({char})=> {
     const {name, gender, born, died, culture} = char;
     return (
         <>
-            <CharHeader>Random Character: {name}</CharHeader>
-            <CharList>
-                <CharacterData>
-                    <CharDataName>Gender </CharDataName>
+            <HeaderS>{name}</HeaderS>
+            <Uls>
+                <Lis>
+                    <Spans>Gender </Spans>
                         <span>{gender}</span>
-                </CharacterData>
-                <CharacterData>
-                    <CharDataName>Born </CharDataName>
+                </Lis>
+                <Lis>
+                    <Spans>Born </Spans>
                         <span>{born}</span>
-                </CharacterData>
-                <CharacterData>
-                    <CharDataName>Died </CharDataName>
+                </Lis>
+                <Lis>
+                    <Spans>Died </Spans>
                     <span>{died}</span>
-                </CharacterData>
-                <CharacterData>
-                    <CharDataName>Culture </CharDataName>
+                </Lis>
+                <Lis>
+                    <Spans>Culture </Spans>
                     <span>{culture}</span>
-                </CharacterData>
-            </CharList>
+                </Lis>
+            </Uls>
         </>
     )
 }

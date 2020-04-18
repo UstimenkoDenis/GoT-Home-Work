@@ -1,52 +1,54 @@
 import React from 'react';
 import styled from 'styled-components';
+import {Link} from 'react-router-dom';
 
-
-const HeaderBlock = styled.div`
+const HeaderBlock = styled.div `
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 80px;
-    flex-wrap: wrap; 
+    flex: 1 1 50px;
+    flex-wrap: wrap;
+  
 `;
 
-const HeaderTitle = styled.h3`
-    font-size: 24px;
-    color: #fff;
+const HeaderTitle = styled.h3 `
+    font-size: 34px;
+    flex: 1 0 auto;
     margin: 0;
 `;
 
-const HeaderLinks = styled.ul`
+const Uls = styled.ul `
     display: flex;
     margin: 0;
     align-items: center;
-    color: #fff;
     list-style-type: none;
-    li {
-        margin-right: 20px;
-        font-size: 18px;
-    }
 `;
+
+const Lis = styled.li `
+    font-size: 24px;
+    padding: 0 15px 0 0;
+`;
+
 
 const Header = () => {
     return (
         <HeaderBlock>
             <HeaderTitle>
-                <a href="#">
-                Game of Thrones DB
-                </a>
+                <Link  to ='/' style = {{textDecoration: 'none', color: '#fff'}}> 
+                    Game of Thrones DB
+                </Link>
             </HeaderTitle>
-            <HeaderLinks>
-                <li>
-                    <a href="#">Characters</a>
-                </li>
-                <li>
-                    <a href="#">Houses</a>
-                </li>
-                <li>
-                    <a href="#">Books</a>   
-                </li>
-            </HeaderLinks>
+            <Uls>
+                <Lis>
+                    <Link to ='/characters/' style = {{textDecoration: 'none', color: '#fff'}}>Characters</Link>
+                </Lis>
+                <Lis>
+                    <Link to = '/houses/' style = {{textDecoration: 'none', color: '#fff'}}>Houses</Link>
+                </Lis>
+                <Lis>
+                    <Link to ='/books/' style = {{textDecoration: 'none', color: '#fff'}}>Books</Link>   
+                </Lis>
+            </Uls>
         </HeaderBlock>
     );
 };

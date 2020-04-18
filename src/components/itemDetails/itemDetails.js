@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './charDetails.css';
 import styled from 'styled-components'; // ввели стилизованные компоненты
 import GotService from '../../services';
 import Spinner from '../spinner';
@@ -8,11 +7,12 @@ import ErrorMessage from '../errorMessage';
 //////////////////////////////// styled components ////////////////////////////////////
 
 const Block = styled.div `
+    width: 700px;
     border: 1px solid #bbacac;
     border-radius: 5px;
     color: #fff;
     padding: 25px 25px 15px 25px;
-    margin: 20px;
+  
     @media (max-width: 768px) {
         
         margin:  0;
@@ -36,7 +36,6 @@ const Lis = styled.li `
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    color: #fff;
     font-size: 1rem;
     padding: 12px 20px;
     border-bottom: 1px solid #bbacac;
@@ -48,12 +47,12 @@ const Spans = styled.span `
 //////////////////////////////// styled components ////////////////////////////////////
 
 
- const Field = ({char, field, label}) => {
+ const Field = ({item, field, label}) => {
     return (
     
         <Lis>
             <Spans>{label}</Spans>
-            <span>{char[field]}</span> 
+            <span>{item[field]}</span> 
         </Lis>
         
     )
@@ -61,40 +60,42 @@ const Spans = styled.span `
  export {
      Field
  }
-export default class CharDetails extends Component {
+export default class ItemDetails extends Component {
     
     gotService = new GotService();
 
     state = {
-        char: null,
+        item: null,
         loading: true,
         error: false
     }
 
     componentDidMount() {
-        this.updateChar();
+        this.updateItem();
     }
 
     componentDidUpdate(prevProps) {  
-       if(this.props.charId !==prevProps.charId) {
-            this.updateChar();
+       if(this.props.itemId !==prevProps.itemId) {
+            this.updateItem();
         } 
     }                           
 
-    updateChar() {                              
-        const {charId} = this.props;
-        if(!charId) {
+    updateItem() {                              
+        const {itemId} = this.props;
+        if(!itemId) {
             return;
         }
         
-        this.gotService.getCharacter(charId)  
-            .then(this.onCharLoaded)   
+        const {getData} = this.props;
+        
+        getData(itemId) 
+            .then(this.onItemLoaded)   
             .catch(this.onError)
     }
     
-    onCharLoaded = (char) => {
+    onItemLoaded = (item) => {
        this.setState({
-            char,
+            item,
             loading: false,
             error: false
        })
@@ -108,11 +109,11 @@ export default class CharDetails extends Component {
     }
 
     render() {
-        if(!this.state.char){
-            return <span className = "select-error">Please select a character</span>
+        if(!this.state.item){
+            return <span className = "select-error">Please select a item</span>
         }
-        const {char} = this.state;
-        const {name} = char; 
+        const {item} = this.state;
+        const {name} = item; 
 
         return (
             <Block>
@@ -120,7 +121,8 @@ export default class CharDetails extends Component {
                 <Uls>
                    {
                        React.Children.map(this.props.children,(child)=>{
-                            return React.cloneElement(child,{char})
+                           
+                            return React.cloneElement(child,{item})
                        })
                       
                    }
@@ -131,9 +133,9 @@ export default class CharDetails extends Component {
     }
 } 
 //              React.Children.map(this.props.children,(child)=>{
-//                              return React.cloneElement(child,{char})
+//                              return React.cloneElement(child,{item})
 //              })                 
 //                                              - здесь мы перебираем наш props.children и из каждого элемента делаем новый
 //                                                элемент к примеру  прибавим к <Field field = 'gender' label = 'Gender'/>
-//                                                еще одно свойство  -  char. 
+//                                                еще одно свойство  -  item. 
 //

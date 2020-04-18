@@ -5,7 +5,9 @@ import Spinner from '../spinner';
 
 
 const Uls = styled.ul `
+    max-width: 500px;
     display: flex;
+    color: #fff;
     flex-direction: column;
     padding: 25px 25px 25px 25px;
     list-style-type: none;   
@@ -22,7 +24,6 @@ const Uls = styled.ul `
 
 const Lis = styled.li `
     cursor: pointer;
-    color: #fff;
     font-weigth: bold;
     font-size: 1rem;
     padding: 12px 20px;

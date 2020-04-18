@@ -25,7 +25,6 @@ export default class GotService {
       getCharacter = async (id) => {
             
             const character = await this.getResource(`/characters/${id}`); 
-            console.log(character);
             return this._transformCharacter(character); 
       }
   
@@ -89,10 +88,11 @@ export default class GotService {
   
       _transformBook = (book) => {
         return {
+              id: this._extractId(book), 
               name: this.isSet(book.name),
               numberOfPages: this.isSet(book.numberOfPages),
-              publiser: this.isSet(book.publiser),
-              relesead: this.isSet(book.released)
+              publisher: this.isSet(book.publisher),
+              relesead: this.isSet(...book.released)
         }
       }
   }
