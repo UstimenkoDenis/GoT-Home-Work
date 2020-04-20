@@ -70,7 +70,7 @@ export default class FirstPage extends Component {
 
    render(){
     const {visibleRandom, toggleChr} = this.state;
-    const visibleRand = visibleRandom? <RandomChar/> : null;
+    const visibleRand = visibleRandom? <RandomChar interval ={5000}/> : null;
     const toggleCharacter = toggleChr? 'Open ': 'Close'; 
         return (
             

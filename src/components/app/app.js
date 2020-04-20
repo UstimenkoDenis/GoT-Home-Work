@@ -12,8 +12,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 ///////////////////////////////////// styled components //////////////////////////////
 
 const Wrapper = styled.div `
-
-   
+   max-width: 100%;
    display: flex;
    flex-direction: column;
    color: #fff;
@@ -22,7 +21,7 @@ const Wrapper = styled.div `
 `; 
 
 const Container = styled.div `
-    
+    max-width: 100%;
     flex: 1 1 auto;
 
 `;  
@@ -73,3 +72,65 @@ export default class App extends Component {
     }
     
 };
+
+// Зайдем в housesPage и удалим строку
+// onItemSelected = {this.onItemSelected} // тогда при вызове домов будет происходить ошибка
+// тогда у нас в ItemList в props он не придет и при onClick - функция не срабатывает тк она будет undefined 
+// реакт предлагает решение defaultProps
+// можем установить пропсы по умолчанию
+
+// ItemList.defaultProps = {
+//     onItemSelected: () => {}  // установим значение чистую функцию
+// } // теперь ошибки нет
+
+// Попрактикуемся с компонентом randomChar
+
+// внем мы видим запуск компонента каждые 15 сек
+//       this.timerId = setInterval(this.updateChar, 15000);
+// заменим колво секунд на переменную из пропс this.props.interval
+// как работает setInterval - если вдруг вместо второго аргумента пришло не число , то этот аргумент будет проигнорирован
+// и функция setInterval поставит интервал обнавления в 10 милисек
+
+// поместим наш defaultProps сразу после state чтобы другие программисты сразу видели какие есть дефолты
+//
+// JS - язык с динамической типизацией - это значит что типы данных могут меняться например interval - если поменяется его тип
+// то функция setInterval будет вести себя по другому - выводить каждые 10 милисек
+
+// Мы сами нативным способом можем проверять на тип данных В реакте есть свойство PropTypes при помощи него мы можем проверять
+// на тип данных у каждого компонента
+
+// в файле firstPage передадим компоненту RandomChar неверный пропс interval = false
+// в файле randomChar напишем проверку на ошибку
+
+// RandomChar.propTypes = {
+
+//     interval: (props, propName, componentName) => {  // функция которая будет делать нашу проверку
+//         const value = props[propName];
+//         if(typeof value === 'number' && !isNaN(value)){
+//             return null  //если все хорошо
+//         }
+//         // если проверку не прошла
+//         return TypeError(`${componentName}: ${propName} must to be a number!`); // выкинем красивую ошибку чтобы любой разработчик понял в чем дело
+//     }
+// }
+
+// Тогда в консоле выведет ошибку Warning ... и тд
+// Такие проверки писать в ручную писать не обязательно так как есть много готовых решений для реакта есть библиотека PropTypes
+
+
+// npm install prop-types
+
+// Работа с этой библиотекой:
+
+
+// импортируем ее
+
+// import PropTypes from 'prop-types'
+
+// пропишем в RandomChar
+
+// RandomChar.propTypes = {
+//     interval: PropTypes.number  // эта проверка будет срабатывать точно так же
+// }
+
+// Напишем такую провеку в ItemList

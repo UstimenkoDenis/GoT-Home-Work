@@ -3,6 +3,7 @@ import GotService from '../../services/gotService'
 import styled from 'styled-components'; // ввели стилизованные компоненты
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
+import PropTypes from 'prop-types'
 
 //////////////////////////////////styled components//////////////////////////////////
 
@@ -60,11 +61,11 @@ export default class RandomChar extends Component {
            loading: true,
            error: false 
         }
-        
+               
     componentDidMount() {
         
        this.updateChar();
-       this.timerId = setInterval(this.updateChar, 6000);
+       this.timerId = setInterval(this.updateChar, this.props.interval);
       
         console.log('mounting');
 

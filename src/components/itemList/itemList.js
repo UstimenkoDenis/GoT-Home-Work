@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 // import './itemList.css';
 import styled from 'styled-components'; // ввели стилизованные компоненты
 import Spinner from '../spinner';
+import PropTypes from 'prop-types'
 
 
 const Uls = styled.ul `
@@ -30,31 +31,25 @@ const Lis = styled.li `
     border-bottom: 1px solid #bbacac;
 `;
 
-export default class ItemList extends Component {
+function ItemList({getData, onItemSelected, renderItem}) {
     
-    state = {
-        itemList: null
-    }
-
-    componentDidMount() {
-        const {getData} = this.props; // 
-
+    const [itemList, updateList] = useState([]);
+  
+    useEffect(()=>{
         getData()
-            .then((itemList) => {
-                this.setState({
-                    itemList
-                })
+            .then((data) => {
+                updateList(data);
             })
-    }
-     
-    renderItems(arr) {
+    }, []);    
+      
+    function renderItems(arr) {
         return arr.map((item)=>{
             const {id} = item;
-            const label = this.props.renderItem(item) 
+            const label = renderItem(item) 
             return (
                 <Lis
                     key = {id}
-                    onClick = {()=>this.props.onItemSelected(id)}>
+                    onClick = {()=>onItemSelected(id)}>
                     {label}
                 </Lis>
             )
@@ -62,26 +57,19 @@ export default class ItemList extends Component {
         })
     }
     
-    render() {
-        const {itemList} = this.state  
-
-        if(!itemList) {
-            return <Spinner/>
-        }
-        const items = this.renderItems(itemList);
-
-        return (
-          
-            <Uls>
-                {items}
-            </Uls>
-        );
+   
+    if(!itemList) {
+        return <Spinner/>
     }
-}
+    const items = renderItems(itemList); 
 
+    return (
+        
+        <Uls>
+            {items}
+        </Uls>
+    );
+    
+} 
 
-
-
-
-
-
+export default ItemList;

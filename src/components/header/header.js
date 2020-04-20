@@ -13,7 +13,7 @@ const HeaderBlock = styled.div `
 
 const HeaderTitle = styled.h3 `
     font-size: 34px;
-    flex: 1 0 auto;
+    flex: 1 1 auto;
     margin: 0;
 `;
 
