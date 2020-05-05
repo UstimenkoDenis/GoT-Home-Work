@@ -14,11 +14,6 @@ const Book = styled.div `
 export default class BooksItem extends Component {
     gotService = new GotService();
     
-    // state = {
-    //     selectedBook: 3
-        
-    // }
-
     render() {
         return (
             <Book>

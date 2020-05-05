@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components'; // ввели стилизованные компоненты
-import GotService from '../../services';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
@@ -51,7 +50,9 @@ const Spans = styled.span `
     return (
     
         <Lis>
+           
             <Spans>{label}</Spans>
+           
             <span>{item[field]}</span> 
         </Lis>
         
@@ -60,82 +61,62 @@ const Spans = styled.span `
  export {
      Field
  }
-export default class ItemDetails extends Component {
-    
-    gotService = new GotService();
 
-    state = {
-        item: null,
-        loading: true,
-        error: false
-    }
 
-    componentDidMount() {
-        this.updateItem();
-    }
+let itemIdLast;
+function ItemDetails({itemId, getData, children}) {
+   
+ const [item, setItem] = useState([]);
+ const [loading, setLoad] = useState(true);
+ const [error, setError] = useState(false);
 
-    componentDidUpdate(prevProps) {  
-       if(this.props.itemId !==prevProps.itemId) {
-            this.updateItem();
+    useEffect(()=>{
+        
+        if(itemId !==itemIdLast) {
+          
+            if(!itemId){
+                return;
+            }
+
+            getData(itemId) 
+                .then((data)=>{
+                    setItem(data);
+                    setLoad(false);
+                    setError(false);
+                })   
+                .catch(onError)
+            return () => { itemIdLast = itemId;}
         } 
-    }                           
-
-    updateItem() {                              
-        const {itemId} = this.props;
-        if(!itemId) {
-            return;
-        }
-        
-        const {getData} = this.props;
-        
-        getData(itemId) 
-            .then(this.onItemLoaded)   
-            .catch(this.onError)
-    }
-    
-    onItemLoaded = (item) => {
-       this.setState({
-            item,
-            loading: false,
-            error: false
-       })
+    })
+   
+   
+    function onError() {
+        console.log('error load')
+        setLoad(false);
+        setError(true);
     }
 
-    onError = () => {
-        this.setState({
-            loading: false,
-            error: true
-       })
+    if(!itemId){
+        return <span className = "select-error">Please select a item</span>
     }
-
-    render() {
-        if(!this.state.item){
-            return <span className = "select-error">Please select a item</span>
-        }
-        const {item} = this.state;
-        const {name} = item; 
-
-        return (
-            <Block>
-                <HeaderS>{name}</HeaderS>
-                <Uls>
-                   {
-                       React.Children.map(this.props.children,(child)=>{
-                           
-                            return React.cloneElement(child,{item})
-                       })
-                      
-                   }
-                    
-                </Uls>
-            </Block>
-        );
-    }
+   
+   const {name} = item; 
+   const spinner = loading? <Spinner/>: null;
+   const errorMessage = error? <ErrorMessage/>: null;
+    return (
+        <Block>
+            <HeaderS>{name}</HeaderS>
+            <Uls>
+                {error}
+                {spinner}
+                {
+                    React.Children.map(children,(child)=>{
+                       return React.cloneElement(child,{item})
+                    })
+                  
+                }
+            </Uls>
+        </Block>
+    );
 } 
-//              React.Children.map(this.props.children,(child)=>{
-//                              return React.cloneElement(child,{item})
-//              })                 
-//                                              - здесь мы перебираем наш props.children и из каждого элемента делаем новый
-//                                                элемент к примеру  прибавим к <Field field = 'gender' label = 'Gender'/>
-//                                                еще одно свойство  -  item. 
-//
+export default ItemDetails;
